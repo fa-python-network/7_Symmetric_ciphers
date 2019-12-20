@@ -68,10 +68,10 @@ def full_decode(value, key):
 
 
 if __name__ == "__main__":
-    #with open('a.json', 'r', encoding= 'UTF-8') as file:
-        #word = json.load(file)
+    with open('a.json', 'r', encoding= 'UTF-8') as file:
+        word = json.load(file)
 
-    word = 'Welcome to the club buddy'
+    #word = 'Welcome to the club buddy'
     key = 'holiday'
     
     print(word)
