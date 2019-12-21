@@ -15,15 +15,11 @@ def xor(text,key):
         result+=chr(text_ord^key_ord)
     return result
        
-
-def segment(message, key_length,num=None):
+def segment(message, key_length):
     """ Сегментирование текста по размеру ключа. 
     Возвращает список сегментов либо сегмент под определённым номером """
-    if not num:
-        num_of_segments=int(len(message)/key_length)
-        result=[message[i*key_length:(i+1)*key_length]for i in range(num_of_segments)]
-    else:
-        result=message[num*key_length:(num+1)*key_length]
+    num_of_segments=int(len(message)/key_length)
+    result=[message[i*key_length:(i+1)*key_length]for i in range(num_of_segments)]
     return result
 
 def add_char(message,key_length,char=" "):
@@ -35,8 +31,8 @@ def add_char(message,key_length,char=" "):
 def randomize(length):
     """ Генерация строки случайных символов """
     result=str()
-    for i in range(length):
-        result+=chr(random.randint(0,2048))
+    for i in range(length): #при больших рандомных числах программа ломается с ошибкой
+        result+=chr(random.randint(0,10000)) # surrogates not allowed 
     return result
 
 def encrypt(message,key,iv):
@@ -51,26 +47,27 @@ def encrypt(message,key,iv):
     result.append(xor(segmented_message[0],iv)) 
     
     for i in range(num_of_segments-1): 
-        encrypted_segment=xor(result[i+1],segmented_message[i+1])
-        encrypted_segment=xor(encrypted_segment,key)
-        result.append(encrypted_segment)
-    
+        result.append(xor(xor(result[i+1],segmented_message[i+1]),key))
+        
     return "".join(result)
 
 def decrypt(message,key):
+    """ Дешифрование текста"""
     result=list()
     segmented_message=segment(message,len(key))
     iv=segmented_message[0]
+    del segmented_message[0] #удаляем IV из сегментированного сообщения
     num_of_segments=len(segmented_message)   
     
-    for i in range(num_of_segments):
-        decrypted_segment=xor(xor(segmented_message[-i],key),segmented_message[-i-1])
-        result.append(decrypted_segment)
+    for i in range(num_of_segments-1,-1,-1): #дешифруем в обратном порядке
+        result.append(xor(xor(segmented_message[i],key),segmented_message[i-1]))
     
+    result[-1]=xor(segmented_message[0],iv)
     result=result[::-1]
+    
     return "".join(result)
 
-message="На практике в шифрах, наподобие Вижинера используется функция XOR вместо сложения. Она обладает большей равномерностью, не требует взятия модуля и обратна самой себе."
+message="Привет, как дела?"
 key=randomize(4)
 iv=randomize(4)
 
