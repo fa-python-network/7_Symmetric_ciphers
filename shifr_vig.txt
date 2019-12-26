@@ -1,0 +1,37 @@
+
+#iv = 2
+msg = list(input('Enter your message: '))
+key_word = 'key'
+
+def gen_key(msg, key):
+    key = list(key)
+    if len(msg)==len(key):
+        return key
+    else:
+        for i in range(len(msg)-len(key)):
+            key.append(key[i%len(key)])
+    return ("".join(key))
+
+def encrypt(msg, key):
+    a, b =[i for i in (msg, key)]
+    res = "".join(map(chr, [ord(x) ^ ord(y) for x,y in [(a[i], b[i]) for i in range (len(a))]]))
+    return res
+
+def decrypt(msg, key):
+    a, b =[i for i in (msg, key)]
+    res = "".join(map(chr, [ord(x) ^ ord(y) for x,y in [(a[i], b[i]) for i in range (len(a))]]))
+    return res
+    
+
+key = gen_key(msg, key_word)
+print("I generated your key :) ")
+print("Generated key: ", key)
+
+print("Encrypted message:")
+text = (encrypt(msg, key))
+print(text)
+
+print("Decrypted message:")
+text_2 = (decrypt(text, key))
+print(text_2)
+
