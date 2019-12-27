@@ -28,3 +28,6 @@ from collections import defaultdict
      print(f"{text} -> «{encrypted_text}» -> {decrypted_text}")
 
      print(f"Подобранный ключ: {decrypt(encrypted_text)}")
+
+
+

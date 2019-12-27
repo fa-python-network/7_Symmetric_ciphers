@@ -17,3 +17,6 @@ from itertools import cycle
      decrypted_text = encryption(encrypted_text, key, decode=True)
 
      print(f"{word} -> «{encrypted_text}» -> {decrypted_text}")
+
+
+
